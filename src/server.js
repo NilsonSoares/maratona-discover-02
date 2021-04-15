@@ -14,6 +14,9 @@ server.set('view engine', 'ejs')
 // habilita os arquivos estáticos
 server.use(express.static("public"))
 
+// usar o request.body
+server.use(express.urlencoded({ extended: true }))
+
 // routes
 server.use(routes)
 

@@ -7,8 +7,14 @@ const server = express()
 // importando as rotas
 const routes = require("./routes")
 
+const path = require("path")
+
 // configura o motor de visualização do html para o ejs
 server.set('view engine', 'ejs')
+
+// mudar a localização da pasta views
+// indica que a pasta views está dentro de src
+server.set('views', path.join(__dirname, 'views'))
 
 // criando a rota para os arquivos públicos
 // habilita os arquivos estáticos

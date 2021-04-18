@@ -1,4 +1,7 @@
+const Database = require("../db/config")
+
 // Lista de jobs
+/*
 let data = [
   {
     id: 1,
@@ -24,18 +27,48 @@ let data = [
     budget: 4500,
   },
 ];
+*/
 // exporta as funções que manipulam os dados dos Jobs
 module.exports = {
   //função que que retorna os dados do profile
-  get() {
-    return data;
+  async get() {
+    const db = await Database()
+
+    const jobs = await db.all(`SELECT * FROM jobs`)
+
+    await db.close()
+
+    return jobs.map(job => ({
+      id: job.id,
+      name: job.name,
+      "daily-hours": job.daily_hours,
+      "total-hours": job.total_hours,
+      created_at: job.created_at
+    }))
   },
   // atualiza o array de dados
-  update(newJob) {
-    data = newJob
+  async update(newJob, jobId) {
+    const db = await Database()
+    
+    await db.run(`UPDATE jobs SET name = "${newJob.name}", daily_hours = ${newJob["daily-hours"]}, total_hours = ${newJob["total-hours"]} WHERE id = ${jobId}`)
+
+    await db.close()
   },
-  //deleta um dado do array
-  delete(id) {
-    data = data.filter(job => Number(job.id) !== Number(id))
+  //deleta um dado do banco de dados
+  async delete(id) {
+    //data = data.filter(job => Number(job.id) !== Number(id))
+    const db = await Database()
+
+    await db.run(`DELETE FROM jobs WHERE id = ${id}`)
+
+    await db.close()
+  },
+  // cria um novo job no banco de dados
+  async create(newJob) {
+    const db = await Database()
+
+    await db.run(`INSERT INTO jobs (name, daily_hours, total_hours, created_at) VALUES ("${newJob.name}", ${newJob["daily-hours"]}, ${newJob["total-hours"]}, ${newJob.created_at})`)
+
+    await db.close()
   }
 }

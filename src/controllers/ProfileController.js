@@ -2,10 +2,10 @@ const Profile = require('../model/Profile')
 
 module.exports = {
     
-    index(request, response) {
-        response.render("profile", { profile: Profile.get() })
+    async index(request, response) { // index se torna async pois Profile.get() é await
+        response.render("profile", { profile: await Profile.get() }) // Profiel.get() deve ser await
     },
-    update(request, response) {
+    async update(request, response) {// update se torna async pois Profile.
 
         // req.body para pegar os dados
         const data = request.body
@@ -21,9 +21,9 @@ module.exports = {
         const valueHour = data["monthly-budget"] / monthlyTotalHours
 
         // atualiza os dados do profile
-        Profile.update({
+        await Profile.update({
             // espalha os dados atuais
-            ...Profile.get(),
+            ... await Profile.get(),
             // atualiza e acrescenta coom os dados recebidos na requisição
             ...request.body,
             // atualiza o valor da hora

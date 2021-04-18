@@ -3,9 +3,9 @@ const JobUtils = require('../utils/JobUtils')
 const Profile = require('../model/Profile')
 
 module.exports = {
-    index(request, response) {
-        const jobs = Job.get()
-        const profile = Profile.get()
+    async index(request, response) { // a função index se torna async pois Profile.get() é await
+        const jobs = await Job.get()
+        const profile = await Profile.get() // await pois Profile.get() é async
 
         const statusCount = {
             progress: 0,
